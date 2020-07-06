@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "79425816914",
+    "firebase_url": "https://hotstagram-4d88d.firebaseio.com",
+    "project_id": "hotstagram-4d88d",
+    "storage_bucket": "hotstagram-4d88d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79425816914:android:27c52fd7494c112f6c128b",
+        "android_client_info": {
+          "package_name": "com.example.hotstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79425816914-37p90f96f1oi8d377q365u09ktnenump.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdDaadVAdmpeLoW_SxePvst21dTtoDhlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79425816914-37p90f96f1oi8d377q365u09ktnenump.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
