@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "79425816914",
-    "firebase_url": "https://hotstagram-4d88d.firebaseio.com",
-    "project_id": "hotstagram-4d88d",
-    "storage_bucket": "hotstagram-4d88d.appspot.com"
+    "project_number": "18486320036",
+    "firebase_url": "https://firecast-app-e40f5.firebaseio.com",
+    "project_id": "firecast-app-e40f5",
+    "storage_bucket": "firecast-app-e40f5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:79425816914:android:27c52fd7494c112f6c128b",
+        "mobilesdk_app_id": "1:18486320036:android:8ae295a7962086f4dc7f31",
         "android_client_info": {
-          "package_name": "com.example.hotstagram"
+          "package_name": "com.example.firecastapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "79425816914-37p90f96f1oi8d377q365u09ktnenump.apps.googleusercontent.com",
+          "client_id": "18486320036-gmb36jaeulnid6r933fod68jheurn4sd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAdDaadVAdmpeLoW_SxePvst21dTtoDhlA"
+          "current_key": "AIzaSyBdsht-vuVcPwHn4IGe0JlF5COOVQYKlrg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "79425816914-37p90f96f1oi8d377q365u09ktnenump.apps.googleusercontent.com",
+              "client_id": "18486320036-gmb36jaeulnid6r933fod68jheurn4sd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
