@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">hotstagram</string>
+    <string name="facebook_app_id">305321734181232</string>
+
 </resources>
