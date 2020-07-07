@@ -13,19 +13,19 @@
 
     <fragment
         android:id="@+id/navigation_search_bold"
-        android:name="com.example.hotstagram.ui.basic.BasicFragment"
+        android:name="com.example.hotstagram.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_upload_01"
-        android:name="com.example.hotstagram.ui.search.SearchFragment"
+        android:name="com.example.hotstagram.ui.upload.UploadFragment"
         android:label="@string/title_upload"
         tools:layout="@layout/fragment_upload" />
 
     <fragment
         android:id="@+id/navigation_basic"
-        android:name="com.example.hotstagram.ui.upload.UploadFragment"
+        android:name="com.example.hotstagram.ui.basic.BasicFragment"
         android:label="@string/title_basic"
         tools:layout="@layout/fragment_basic" />
 

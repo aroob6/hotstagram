@@ -15,21 +15,11 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.hotstagram.R;
 
 public class BasicFragment extends Fragment {
-
-    private BasicViewModel basicViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        basicViewModel =
-                ViewModelProviders.of(this).get(BasicViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_basic, container, false);
-        final TextView textView = root.findViewById(R.id.text_basic);
-        basicViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+
+        return inflater.inflate(R.layout.fragment_basic, container, false);
+
+
     }
 }
