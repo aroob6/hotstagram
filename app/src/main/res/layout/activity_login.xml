@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
@@ -15,15 +15,23 @@
         <ImageView
             android:layout_width="309dp"
             android:layout_height="142dp"
-            android:layout_marginBottom="100dp"
+            android:layout_marginTop="180dp"
             app:srcCompat="@drawable/logo"
             tools:layout_editor_absoluteX="51dp"
             tools:layout_editor_absoluteY="104dp" />
 
+        <Button
+            android:id="@+id/btn_google"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:text="구글연동버튼"
+
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
@@ -31,6 +39,7 @@
             <ImageView
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 app:srcCompat="@drawable/line"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="470dp" />
@@ -39,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@color/maincolor"
                 android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -47,6 +57,7 @@
             <ImageView
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 app:srcCompat="@drawable/line"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="470dp" />

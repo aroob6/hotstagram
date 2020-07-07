@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">hotstagram</string>
     <string name="facebook_app_id">305321734181232</string>
+    <string name="title_activity_home">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_upload">Upload</string>
+    <string name="title_basic">Basic</string>
+    <string name="title_user">User</string>
 
 </resources>
