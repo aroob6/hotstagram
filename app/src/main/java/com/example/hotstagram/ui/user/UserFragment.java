@@ -8,28 +8,33 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 
 public class UserFragment extends Fragment {
 
-    private UserViewModel userViewModel;
+    Toolbar toolbar;
+    ActionBar actionBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        userViewModel =
-                ViewModelProviders.of(this).get(UserViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_user, container, false);
-        final TextView textView = root.findViewById(R.id.text_user);
-        userViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        //툴바
+        View view = (View) inflater.inflate(R.layout.fragment_home, container, false);
+        MainActivity activity = (MainActivity) getActivity();
+        toolbar = view.findViewById(R.id.toolbar);
+        activity.setSupportActionBar(toolbar);
+        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+
         return root;
     }
 }
