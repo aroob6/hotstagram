@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:899735449187:android:db3caaf6e39fa97e589256",
+        "mobilesdk_app_id": "1:899735449187:android:2ff86c23fbf5b82b589256",
         "android_client_info": {
           "package_name": "com.example.hotstagram"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "899735449187-0h5cq83sablu0eq5rkqbuoqm1pj9jchp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hotstagram",
+            "certificate_hash": "a8d4f24e6863756189e101e98022e6477f30b1f0"
+          }
+        },
         {
           "client_id": "899735449187-9pt0chuours19luotdcb4sv409iokbhr.apps.googleusercontent.com",
           "client_type": 1,

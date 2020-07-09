@@ -1,5 +1,7 @@
 package com.example.hotstagram.ui.search;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +18,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 public class SearchFragment extends Fragment {
     Toolbar toolbar;
     ActionBar actionBar;
     Fragment fragment_hot;
-    FragmentManager fragmentManager;
+    FragmentManager fragmentManager = getFragmentManager();
     ViewGroup rootView;
+
+    private TabLayout tabLayout;
+    private ArrayList <String> tabNames = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,47 +54,44 @@ public class SearchFragment extends Fragment {
         et_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //탭
-                fragment_hot = new Fragment();
-                fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentLayout,fragment_hot).commitAllowingStateLoss();
-
-                TabLayout tablayout =(TabLayout) rootView.findViewById(R.id.tablayout);
-                tablayout.addTab(tablayout.newTab().setText("인기"));
-                tablayout.addTab(tablayout.newTab().setText("계정"));
-                tablayout.addTab(tablayout.newTab().setText("태그"));
-                tablayout.addTab(tablayout.newTab().setText("장소"));
-
-                tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        int position = tab.getPosition();
-
-                        Fragment selected = null;
-                        if(position==0){
-                            selected =  fragment_hot;
-                        }
-
-                        fragmentManager.beginTransaction().replace(R.id.container, selected).commit();
-
-                    }
-
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-
-                    }
-                });
-
-
+                /*loadTabName();
+                setTabLayout();
+                setViewPager();*/
             }
         });
 
-
         return rootView;
     }
-}
+    /*@TargetApi(Build.VERSION_CODES.N)
+    private void setTabLayout(){
+        tabLayout = rootView.findViewById(R.id.tab);
+        tabNames.stream().forEach(name ->tabLayout.addTab(tabLayout.newTab().setText(name)));
+    }
+
+    private void loadTabName(){
+        tabNames.add("탭1");
+        tabNames.add("탭2");
+        tabNames.add("탭3");
+    }
+
+    private void setViewPager() {
+       TablayoutAdapter adapter = new TablayoutAdapter(fragmentManager);
+        ViewPager viewPager = rootView.findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });*/
+    }

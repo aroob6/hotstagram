@@ -7,22 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 
-import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 
-public class HotFragment extends Fragment {
+public class TagFragment extends Fragment {
     View view;
-    public  HotFragment() {
+    public  TagFragment() {
         // Required empty public constructor
     }
 
 
-    public static  HotFragment newInstance() {
-        HotFragment hotfragment = new  HotFragment();
-        return  hotfragment;
+    public static  TagFragment newInstance() {
+        TagFragment tagfragment = new  TagFragment();
+        return  tagfragment;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
