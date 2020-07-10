@@ -24,13 +24,12 @@
             tools:layout_editor_absoluteX="51dp"
             tools:layout_editor_absoluteY="104dp" />
 
-        <Button
+        <com.google.android.gms.common.SignInButton
             android:id="@+id/btn_google"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="100dp"
-            android:text="구글연동버튼"
             android:layout_marginRight="10dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="10dp"
