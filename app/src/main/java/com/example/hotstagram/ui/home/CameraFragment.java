@@ -1,7 +1,8 @@
-package com.example.hotstagram.ui.search;
+package com.example.hotstagram.ui.home;
 
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,27 +10,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 
-public class HotFragment extends Fragment {
-    View view;
-    public  HotFragment() {
-        // Required empty public constructor
+public class CameraFragment extends Fragment {
+
+    public CameraFragment(){
+
     }
-
-
-    public static  HotFragment newInstance() {
-        HotFragment hotfragment = new  HotFragment();
-        return  hotfragment;
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_hot, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        return view;
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivity(intent);
+
+        return root;
     }
 }

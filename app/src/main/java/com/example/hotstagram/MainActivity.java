@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.example.hotstagram.ui.user.UserFragment;
 import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -108,11 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+            //FirebaseAuth.getInstance().signOut();
             LoginManager.getInstance().logOut();
             Toast.makeText(this, "로그아웃", Toast.LENGTH_LONG).show();
             intent = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(intent);
             finish();
     }
+
 }
 

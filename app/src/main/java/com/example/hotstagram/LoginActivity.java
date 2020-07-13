@@ -106,6 +106,12 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
         final LoginButton btn_facebook_login = findViewById(R.id.btn_facebook_login);
         final Button btn_facebook = findViewById(R.id.btn_facebook);
 
+        btn_facebook_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                facebookLoginOnClick(view);
+            }
+        });
         btn_facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,6 +192,7 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
                 });
     }
 
+    //페이스북 auth
     private void handleFacebookAccessToken(AccessToken token) {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -247,3 +254,4 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
         });
     }
 }
+
