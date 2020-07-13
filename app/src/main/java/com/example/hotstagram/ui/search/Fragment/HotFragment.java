@@ -1,16 +1,13 @@
-package com.example.hotstagram.ui.search;
+package com.example.hotstagram.ui.search.Fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-
-import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 
 public class HotFragment extends Fragment {

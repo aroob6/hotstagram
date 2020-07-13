@@ -1,4 +1,4 @@
-package com.example.hotstagram.ui.search;
+package com.example.hotstagram.ui.search.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

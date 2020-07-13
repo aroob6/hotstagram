@@ -16,11 +16,6 @@
         android:layout_height="0dp"
         >
 
-        <!--<include
-            layout="@layout/activity_user_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />-->
-
         <include
             layout="@layout/activity_user_content"
             android:layout_width="match_parent"
@@ -35,5 +30,7 @@
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/drawer_setting"
             tools:ignore="MissingClass" />
+
+
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

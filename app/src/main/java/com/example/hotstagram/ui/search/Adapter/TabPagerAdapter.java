@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.hotstagram.ui.search.AccountFragment;
-import com.example.hotstagram.ui.search.HotFragment;
-import com.example.hotstagram.ui.search.PlaceFragment;
-import com.example.hotstagram.ui.search.TagFragment;
+import com.example.hotstagram.ui.search.Fragment.AccountFragment;
+import com.example.hotstagram.ui.search.Fragment.HotFragment;
+import com.example.hotstagram.ui.search.Fragment.PlaceFragment;
+import com.example.hotstagram.ui.search.Fragment.TagFragment;
 
 import java.util.ArrayList;
 

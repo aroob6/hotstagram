@@ -4,33 +4,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.hotstagram.ui.basic.BasicFragment;
 import com.example.hotstagram.ui.home.HomeFragment;
-import com.example.hotstagram.ui.search.SearchFragment;
+import com.example.hotstagram.ui.search.Fragment.SearchFragment;
 import com.example.hotstagram.ui.upload.UploadFragment;
 import com.example.hotstagram.ui.user.UserFragment;
 import com.facebook.login.LoginManager;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import java.io.InputStream;
 
@@ -40,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 0;
     ImageView insertimg;
     Intent intent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

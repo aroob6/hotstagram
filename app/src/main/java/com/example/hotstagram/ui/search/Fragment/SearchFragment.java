@@ -1,4 +1,4 @@
-package com.example.hotstagram.ui.search;
+package com.example.hotstagram.ui.search.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,7 +38,6 @@ public class SearchFragment extends Fragment {
         actionBar.setDisplayShowCustomEnabled(true);
 
 
-/*
 
         //tab
         EditText et_search = rootView.findViewById(R.id.et_search);
@@ -64,7 +63,6 @@ public class SearchFragment extends Fragment {
 
 
         gridView.setAdapter(gridViewAdapter);
-*/
 
         return rootView;
     }

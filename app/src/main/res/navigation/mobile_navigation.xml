@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_search_bold"
-        android:name="com.example.hotstagram.ui.search.SearchFragment"
+        android:name="com.example.hotstagram.ui.search.Fragment.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 
