@@ -1,18 +1,14 @@
 package com.example.hotstagram.ui.home;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 
 public class CameraFragment extends Fragment {
@@ -23,10 +19,9 @@ public class CameraFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivity(intent);
+        View root = inflater.inflate(R.layout.activity_main_camera, container, false);
+        TextView textView = root.findViewById(R.id.textView);
+        textView.setText("sadsadasd");
 
         return root;
     }

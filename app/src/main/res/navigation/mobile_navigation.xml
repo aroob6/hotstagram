@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_search_bold"
-        android:name="com.example.hotstagram.ui.search.Fragment.SearchFragment"
+        android:name="com.example.hotstagram.ui.search.fragment.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/navigation_user"
-        android:name="com.example.hotstagram.ui.user.UserFragment"
+        android:name="com.example.hotstagram.ui.user.fragment.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 </navigation>

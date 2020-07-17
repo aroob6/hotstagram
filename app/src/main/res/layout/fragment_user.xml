@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.user.UserFragment">
+    tools:context=".ui.user.fragment.UserFragment">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_setting"
@@ -17,9 +17,10 @@
         >
 
         <include
+            android:id="@+id/include"
             layout="@layout/activity_user_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_setting"
@@ -31,6 +32,6 @@
             app:menu="@menu/drawer_setting"
             tools:ignore="MissingClass" />
 
-
     </androidx.drawerlayout.widget.DrawerLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

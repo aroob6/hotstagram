@@ -20,20 +20,23 @@ import com.example.hotstagram.R;
 public class BasicFragment extends Fragment {
 
     Toolbar toolbar;
-    ActionBar actionBar;
+    View include;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //툴바
-        View view = (View) inflater.inflate(R.layout.fragment_home, container, false);
-        MainActivity activity = (MainActivity) getActivity();
-        toolbar = view.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbar);
-        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
+        View root = inflater.inflate(R.layout.fragment_basic, container, false);
 
-        return inflater.inflate(R.layout.fragment_basic, container, false);
+        include = root.findViewById(R.id.toolbar);
+
+        //툴바
+        toolbar = include.findViewById(R.id.toolbar);
+
+        MainActivity activity = (MainActivity)getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle("");
+
+        return root;
 
 
     }
