@@ -56,12 +56,15 @@ public class HomeFragment extends Fragment {
 
     //데이터베이스
     FirebaseFirestore firebaseFirestore;
-    FirebaseUser firebaseUser;
-    private FirebaseStorage storage;
+    FirebaseUser user;
+    String getUid;
+    String getImgUri;
 
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
-    long now = System.currentTimeMillis();
+
+    int i;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,17 +73,14 @@ public class HomeFragment extends Fragment {
 
         //데이터베이스
         firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
-      /*  Map<String, Object> Mapuser = new HashMap<>();
-        Mapuser.put("name", firebaseUser.getDisplayName());
-        Mapuser.put("UID", firebaseUser.getUid());
-        Mapuser.put("E-mail", firebaseUser.getEmail());
-        Mapuser.put("PhotoURL", "gs://hotstagram-cd509.appspot.com/");
-        //StorageReference storageRef = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/");
+        Map<String, Object> Mapuser = new HashMap<>();
+        Mapuser.put("name", user.getDisplayName());
+
 
         //데이터 추가
-        firebaseFirestore.collection("HG_Test").document(firebaseUser.getDisplayName()+"_"+now)
+        firebaseFirestore.collection("User").document("facebook")
                 .set(Mapuser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -94,19 +94,68 @@ public class HomeFragment extends Fragment {
 
                     }
                 });
-*/
+
 
         //데이터 가져오기
-        firebaseFirestore.collection("HG_Test").document("User_Info")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firebaseFirestore.collection("Test").document("SetImg").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        Log.e("document값!!!", "" + task.getResult());
+
+                        if (document.exists()) {
+
+                            //값 가져오기
+                            getUid = document.getString("getUid");
+                            getImgUri = document.getString("getImgUri");
+
+                            if (getUid.equals(user.getUid())) {
+
+                                mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+                                mRecyclerView.setHasFixedSize(true);
+                                mLayoutManager = new LinearLayoutManager(getActivity());
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+
+                                SuccessUrl(getImgUri);
+
+                            }
+                        } else {
+                            Log.e("가져오기 실패", "No such document");
+                        }
+                    } else {
+                        Log.e("가져오기 실패", "get failed with ", task.getException());
+                    }
+                }
+            });
+
+
+        /*firebaseFirestore.collection("UserProfile").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    Log.e("document값!!!", "" + task.getResult());
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        getUid = document.getString("getUid");
+                        getImgUri = document.getString("getImgUri");
+
+                        if (getUid.equals(user.getUid())) {
+
+                            mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+                            mRecyclerView.setHasFixedSize(true);
+                            mLayoutManager = new LinearLayoutManager(getActivity());
+                            mRecyclerView.setLayoutManager(mLayoutManager);
+
+                            SuccessUrl(getImgUri);
+
+                        }
+
+                        Log.d("가져오기", document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d("가져오기 실패", "Error getting documents: ", task.getException());
                 }
             }
-        });
+        });*/
 
 
         //툴바
@@ -130,7 +179,7 @@ public class HomeFragment extends Fragment {
         return rootView;
 
     }
-/*
+
     public void SuccessUrl(String getImgUri) {
 
         firebaseStorage = FirebaseStorage.getInstance();
@@ -141,10 +190,10 @@ public class HomeFragment extends Fragment {
             public void onSuccess(Uri uri) {
                 Log.e("다운로드 성공", "성공" + uri);
                 ArrayList<PostInfo> postInfoArrayList = new ArrayList<>();
-                *//*for(int i = 0; i<postInfoArrayList.size(); i++) {
+                /*for(int i = 0; i<postInfoArrayList.size(); i++) {
                     //postInfoArrayList.add(new PostInfo(user.getDisplayName(), uri));
                     postInfoArrayList.add(new PostInfo(user.getDisplayName(), uri))
-                }*//*
+                }*/
 
                 Log.e("추가 성공1", "" + uri);
 
@@ -168,6 +217,6 @@ public class HomeFragment extends Fragment {
                 Log.e("다운로드 실패", "실패");
             }
         });
-    }*/
+    }
 
 }

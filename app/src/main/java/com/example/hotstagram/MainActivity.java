@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         setmapuserimg.put("getImgUri","gs://hotstagram-cd509.appspot.com/upload/"+ firebaseUser.getUid() + "_" + filename);
 
 
-        firebaseFirestore.collection("UserProfile").document("SetImg")
+        firebaseFirestore.collection("Test").document("SetImg")
                 .set(setmapuserimg)
                 /*.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -212,4 +212,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
