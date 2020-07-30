@@ -1,7 +1,7 @@
 package com.example.hotstagram.ui.search.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +10,21 @@ import android.widget.ImageView;
 
 import com.example.hotstagram.R;
 import com.example.hotstagram.ui.search.GridViewItem;
+import com.example.hotstagram.util.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 public class GridViewAdapter extends BaseAdapter {
 
     private ArrayList<GridViewItem> arrayList = new ArrayList<>();
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    StorageReference islandRef;
+    ImageView imageView;
+
+
     public GridViewAdapter(){
 
     }
@@ -44,17 +53,18 @@ public class GridViewAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.fragment_search_gridview,viewGroup,false);
         }
-        ImageView imageView = (ImageView)view.findViewById(R.id.iv_img);
 
         GridViewItem gridViewItem = arrayList.get(i);
-
-        imageView.setImageDrawable(gridViewItem.getDrawable());
+        imageView = (ImageView)view.findViewById(R.id.iv_img);
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/"+gridViewItem.getUri().toString());
+        GlideApp.with(context /* context */).load(storageRef).into(imageView);
 
         return view;
     }
-    public void addItem(Drawable drawable){
+    public void addItem(String uri){
         GridViewItem gridViewItem = new GridViewItem();
-        gridViewItem.setDrawable(drawable);
+        gridViewItem.setUri(Uri.parse(uri));
 
         arrayList.add(gridViewItem);
     }

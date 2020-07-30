@@ -1,36 +1,59 @@
 package com.example.hotstagram.ui.home;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 public class PostInfo {
+    public String uid;
+    public String num;
     public String name;
-    public Uri img;
-    /* public ArrayList<String>imglist ;*/
+    public String letter;
+    public String img;
+    public int count;
+    public int size;
+    public Uri profil;
+    public String commant;
 
-    public PostInfo(String name, Uri img /*, ArrayList<String> imglist*/){
-        this.name = name;
-        this.img = img;
-        /*this.imglist = imglist;*/
-    }
+    public String getUid() { return uid; }
+    public void setUid(String uid) { this.uid = uid; }
 
-    /*public void setName(String name) {
-        this.name = name;
-    }
+    public String getNum() { return num; }
+    public void setNum(String num) { this.num = num; }
 
     public String getName() {
         return name;
-    }*/
-
-   /* public void setImglist(ArrayList<String> imglist) {
-        this.imglist = imglist;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public ArrayList<String> getImglist() {
-        return imglist;
-    }*/
+    public  String getLetter() {
+        return letter;
+    }
+    public void setLetter(String letter) {
+        this.letter = letter;
+    }
+
+    public  String getImg() { return img; }
+    public void setImg(String img) { this.img = img; }
+
+    public int getCount() {
+        return count;
+    }
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getSize() { return size; }
+    public void setSize(int size) { this.size = size; }
+
+    public Uri getProfil() {
+        return profil;
+    }
+    public void setProfil(Uri profil) { this.profil = profil; }
+
+    public String getCommant() { return commant; }
+
+    public void setCommant(String commant) { this.commant = commant; }
 }

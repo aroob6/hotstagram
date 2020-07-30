@@ -20,10 +20,10 @@ public class InformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_user_information);
 
-    btn_access = (Button)findViewById(R.id.btn_push);
-    btn_privacy = (Button)findViewById(R.id.btn_privacy);
+        btn_access = (Button)findViewById(R.id.btn_push);
+        btn_privacy = (Button)findViewById(R.id.btn_privacy);
 
-    btn_access.setOnClickListener(new View.OnClickListener() {
+        btn_access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 intent = new Intent(getApplicationContext(), AccessActivity.class);

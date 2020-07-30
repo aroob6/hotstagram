@@ -1,16 +1,18 @@
 package com.example.hotstagram.ui.search;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 public class GridViewItem {
-    private Drawable drawable;
+    private Uri uri;
 
-    public Drawable getDrawable(){
-        return drawable;
+    public Uri getUri(){
+        return uri;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
+
 
 }

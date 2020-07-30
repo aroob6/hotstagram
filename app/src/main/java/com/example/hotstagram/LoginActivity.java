@@ -1,30 +1,20 @@
 package com.example.hotstagram;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.loader.content.CursorLoader;
-
-import android.Manifest;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -48,8 +38,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +51,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements OnConnectionFailedListener, GoogleApiClient.OnConnectionFailedListener {
 
+    private final String TAG = LoginActivity.class.getSimpleName();
+
     private CallbackManager mCallbackManager;
     private SignInButton btn_google; // 구글 로그인 버튼
     private FirebaseUser user; //파이어베이스 유저
@@ -65,14 +60,17 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient; // 구글 API 클라이언트 객체
     private static final int REQ_SIGN_GOOGLE = 100; // 구글 로그인 결과 코드
-    long now = System.currentTimeMillis();
-
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext()); // setContentView전에 해야함
         setContentView(R.layout.activity_login);
+
+        Intent intent = new Intent(this, LoadingPageActivity.class);
+        startActivity(intent);
 
         mCallbackManager = CallbackManager.Factory.create(); // 페이스북 콜백 등록
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -158,14 +156,12 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                //Toast.makeText(LoginActivity.this, "페북로그인 성공"+ auth.getCurrentUser(), Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
             }
 
             @Override
             public void onCancel() {
-
             }
 
             @Override
@@ -184,7 +180,8 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // 로그인 성공
-                            Toast.makeText(LoginActivity.this, "로그인 성공" + auth.getCurrentUser(), Toast.LENGTH_SHORT).show();
+                            storeUserInfo();
+                            Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -201,34 +198,14 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
     //구글 로그인
     private void resultLogin(final GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) { // 로그인이 성공 했을 때
-                            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                            Map<String, Object> Mapuser = new HashMap<>();
-                            Mapuser.put("name", firebaseUser.getDisplayName());
-                            Mapuser.put("UID", firebaseUser.getUid());
-                            Mapuser.put("E-mail", firebaseUser.getEmail());
-
-                            firebaseFirestore.collection("HG_Test").document(firebaseUser.getDisplayName() + "_" + now)
-                                    .set(Mapuser)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.e("성공 : ", "" + FirebaseAuth.getInstance().getCurrentUser());
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-                                        }
-                                    });
-                            Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                            storeUserInfo();
+                            Toast.makeText(LoginActivity.this, firebaseUser.getDisplayName()+"님 안녕하세요.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -279,11 +256,68 @@ public class LoginActivity extends AppCompatActivity implements OnConnectionFail
                     });
                 }
             }
-
             @Override
             public void onConnectionSuspended(int i) {
             }
         });
     }
 
+    public void storeUserInfo(){
+        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        //문서 값 전체 불러오기
+        DocumentReference docRef = firebaseFirestore.collection("Inter_Test").document(firebaseUser.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "Document 데이터 존재: " + document.getData());
+                    } else {
+                        Log.e(TAG, "Document 데이터 없음");
+                    }
+
+                    String mUid = (String) firebaseUser.getUid();
+                    String fUid = (String) document.get("UID");
+
+                    // 현재 로그인 하려는 사용자와 문서에 있는 사용자가 같은 경우 덮어쓰기 X
+                    if(mUid.equals(fUid)) {
+                        Log.d(TAG, " 동일한 사용자 존재 " + firebaseUser.getUid());
+
+                        // 현재 로그인 하려는 사용자와 문서에 있는 사용자가 다를 경우 새로 생성
+                    } else {
+                        final Map<String, Object> Mapuser = new HashMap<>();
+                        Mapuser.put("Name", firebaseUser.getDisplayName());
+                        Mapuser.put("UID", firebaseUser.getUid());
+                        Mapuser.put("E-mail", firebaseUser.getEmail());
+                        Mapuser.put("Message", null);
+                        Mapuser.put("NickName", null);
+                        Mapuser.put("ProfileURI", null);
+
+                        firebaseFirestore.collection("Inter_Test").document(firebaseUser.getUid())
+                                .set(Mapuser)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.e(" 로그인 시 DB 저장 성공  ", "" );
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
 }
+
+

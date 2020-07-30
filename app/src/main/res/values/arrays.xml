@@ -7,4 +7,11 @@
         <item >프로필 사진 삭제</item>
 
     </string-array>
+
+    <string-array name="home_post">
+
+        <item >삭제</item>
+        <item >수정</item>
+
+    </string-array>
 </resources>

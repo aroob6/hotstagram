@@ -1,7 +1,7 @@
 package com.example.hotstagram.ui.user.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,25 +9,32 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.example.hotstagram.R;
-import com.example.hotstagram.ui.search.GridViewItem;
+import com.example.hotstagram.ui.user.UserGridItemView;
+import com.example.hotstagram.util.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 public class UserGridViewAdapter extends BaseAdapter {
 
-    private ArrayList<GridViewItem> arrayList = new ArrayList<>();
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    ImageView iv_photo;
+    private ArrayList<UserGridItemView> userArrayList = new ArrayList<>();
+
     public UserGridViewAdapter(){
 
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return userArrayList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return arrayList.get(i);
+        return userArrayList.get(i);
     }
 
     @Override
@@ -44,18 +51,23 @@ public class UserGridViewAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.user_profile_gridview,viewGroup,false);
         }
-        ImageView iv_photo = view.findViewById(R.id.iv_photo);
 
-        GridViewItem gridViewItem = arrayList.get(i);
+        UserGridItemView userGridItemView = userArrayList.get(i);
+        iv_photo = view.findViewById(R.id.iv_postphoto);
 
-        iv_photo.setImageDrawable(gridViewItem.getDrawable());
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/"+userGridItemView.getUri().toString());
+        GlideApp.with(context).load(storageRef).into(iv_photo);
 
         return view;
     }
-    public void addItem(Drawable drawable){
-        GridViewItem gridViewItem = new GridViewItem();
-        gridViewItem.setDrawable(drawable);
 
-        arrayList.add(gridViewItem);
+    public void addItem(String uri){
+        UserGridItemView userGridItemView = new UserGridItemView();
+        userGridItemView.setUri(Uri.parse(uri));
+
+        userArrayList.add(userGridItemView);
     }
+
+
 }

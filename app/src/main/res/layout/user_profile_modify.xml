@@ -10,7 +10,7 @@
             android:id="@+id/profile_modi"
             />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_user_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -18,8 +18,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_modi"
-        app:srcCompat="@drawable/user_profile2"
-        tools:ignore="UnknownId" />
+        android:src="@drawable/user_profile2"
+        tools:ignore="UnknownId"/>
+
 
     <TextView
         android:id="@+id/tv_name"
@@ -41,9 +42,12 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="user_Name"
         android:hint="User_Name"
-        android:textColor="@color/colorPrimary"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name"
         tools:ignore="MissingConstraints" />
@@ -68,8 +72,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:hint="NickName"
-        android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,9 +102,11 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:hint="Informaion"
-        android:textColor="@color/colorPrimary"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_info"
         tools:ignore="MissingConstraints" />

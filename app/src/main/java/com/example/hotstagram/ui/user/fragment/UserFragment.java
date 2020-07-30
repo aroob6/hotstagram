@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,96 +25,104 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.example.hotstagram.ui.user.activity.AdvertisementActivity;
-import com.example.hotstagram.ui.user.activity.InformationActivity;
 import com.example.hotstagram.LoginActivity;
 import com.example.hotstagram.MainActivity;
+import com.example.hotstagram.R;
+import com.example.hotstagram.ui.home.HomeFragment;
+import com.example.hotstagram.ui.user.activity.AdvertisementActivity;
+import com.example.hotstagram.ui.user.activity.InformationActivity;
 import com.example.hotstagram.ui.user.activity.NotificationActivity;
 import com.example.hotstagram.ui.user.activity.ProfileModifyActivity;
-import com.example.hotstagram.R;
+import com.example.hotstagram.ui.user.adapter.UserGridViewAdapter;
+import com.example.hotstagram.util.GlideApp;
 import com.facebook.login.LoginManager;
+import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-import static com.firebase.ui.auth.AuthUI.getInstance;
 
 public class UserFragment extends Fragment {
 
-    Bitmap bitmap;
-    private FirebaseAuth mauth; // 파이어베이스 인증 객체
-    DrawerLayout drawerLayout;
+    private static final String TAG = UserFragment.class.getSimpleName();
+    private final String REFERENCE_URL = "gs://hotstagram-cd509.appspot.com";
+
+    FirebaseFirestore firebaseFirestore;
+    FirebaseUser firebaseUser;
+    StorageReference storageRef;
+    private FirebaseAuth auth; // 파이어베이스 인증 객체
+    FirebaseStorage storage;
+
+    Fragment profileFragment;
+    UserGridViewAdapter userGridViewAdapter;
+    ArrayList<QueryDocumentSnapshot> sendDocument;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    Toolbar toolbar;
     NavigationView navigationView;
-    View include;
+    DrawerLayout drawerLayout;
+    TextView toolbar_user_name;
+    TextView nav_user_name;
+    TextView user_message;
+    TextView user_name;
+    TextView post_num;
+    TextView user_bio;
+    ImageView user_profile_add;
+    ImageView nav_user_photo;
+    ImageView user_Profile;
+    ImageView user_profile;
     Button userButton;
-    private Context context;
+    Context context;
+    Toolbar toolbar;
     Intent intent;
-    private static final int GALLERY_CODE = 0;
+    View include;
+    View header;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_user, container, false);
 
-        View root = (View)inflater.inflate(R.layout.fragment_user, container, false);
-
-        include = root.findViewById(R.id.include);
-
-        context = container.getContext();
-        assert getFragmentManager() != null;
         getFragmentManager().beginTransaction().replace(R.id.tab_fragment_user, new UserTablayoutFragment()).commit();
 
+        include = root.findViewById(R.id.include);
+        context = container.getContext();
+
+        profileFragment = new ProfileFragment();
+
         //Firebase 로그인한 사용자 정보
-        mauth = FirebaseAuth.getInstance();
-        final FirebaseUser firebaseUser = mauth.getCurrentUser();
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
 
+        drawerLayout = root.findViewById(R.id.drawer_setting);
         navigationView = root.findViewById(R.id.navigation_setting);
-        View header = navigationView.getHeaderView(0);
+        user_Profile = root.findViewById(R.id.user_profile);
+        header = navigationView.getHeaderView(0);
+        nav_user_photo = header.findViewById(R.id.nav_user_photo);
 
-        ImageView user_Profile = root.findViewById(R.id.user_profile);
-        ImageView nav_user_photo = header.findViewById(R.id.nav_user_photo);
+        user_profile = include.findViewById(R.id.user_profile);
+        user_profile_add = include.findViewById(R.id.user_profile_add);
+        nav_user_name = header.findViewById(R.id.nav_user_name);
+        toolbar_user_name = root.findViewById(R.id.toolbar_user_name);
+        user_name = root.findViewById(R.id.tv_user_name);
+        user_message = root. findViewById(R.id.tv_bio);
+        post_num = root.findViewById(R.id.post_num);
+        user_bio = root.findViewById(R.id.tv_bio);
 
-        Thread mThread= new Thread(){
-            @Override
-            public void run() {
-                try{
-                    //현재로그인한 사용자 정보를 통해 PhotoUrl 가져오기
-                    URL url = new URL(firebaseUser.getPhotoUrl().toString());
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
 
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-
-        try{
-            mThread.join();
-            //변환한 bitmap적용
-            user_Profile.setImageBitmap(bitmap);
-            nav_user_photo.setImageBitmap(bitmap);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-
-        TextView nav_user_name = header.findViewById(R.id.nav_user_name);
-        TextView toolbar_user_name = root.findViewById(R.id.toolbar_user_name);
-        TextView user_name = root.findViewById(R.id.tv_user_name);
         nav_user_name.setText(firebaseUser.getDisplayName());
         toolbar_user_name.setText(firebaseUser.getDisplayName());
         user_name.setText(firebaseUser.getDisplayName());
@@ -123,22 +133,61 @@ public class UserFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle("");
 
-        // 네비게이션 드로어
-        drawerLayout = root.findViewById(R.id.drawer_setting);
-        navigationView = root.findViewById(R.id.navigation_setting);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        Log.e("drawerLayout",drawerLayout.getId()+" ");
+        //문서 값 전체 불러오기
+        DocumentReference docRef = firebaseFirestore.collection("Inter_Test").document(firebaseUser.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                String mNickName;
+                String mMessage;
+                String mName;
+                String mBio = "User Statement";
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        mName = (String)document.get("Name");
+                        if(document.get("NickName") != null) {
+                            mNickName = (String) document.get("NickName");
+                        }else{
+                            mNickName = (String) document.get("Name");
+                        }
+                        mMessage = (String)document.get("Message");
+                        if(document.get("ProfileURI") != null) {
+                            Log.d("ProfileUri",document.get("ProfileURI")+" ");
+                            storage = FirebaseStorage.getInstance();
+                            storageRef = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/"+document.get("ProfileURI"));
+                            GlideApp.with(context).load(storageRef).into(user_profile);
+                            GlideApp.with(context).load(storageRef).into(nav_user_photo);
+                        }
+
+                        user_name.setText(mName);
+                        nav_user_name.setText(mNickName);
+                        toolbar_user_name.setText(mNickName);
+                        user_message.setText(mMessage);
+                        user_bio.setText(mBio);
+
+                    } else {
+                        Log.e(TAG, "Document 데이터 없음");
+                    }
+                }
+            }
+        });
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-
+        // 네비게이션 드로어
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-              //  intent = getActivity().getIntent();
+                //  intent = getActivity().getIntent();
                 switch (menuItem.getItemId())
                 {
                     case R.id.notification:
@@ -158,7 +207,7 @@ public class UserFragment extends Fragment {
                         break;
                     case R.id.logout:
                         // FirebaseAuth.getInstance().signOut();
-                        mauth.signOut();
+                        auth.signOut();
                         LoginManager.getInstance().logOut();
                         Toast.makeText(context, "로그아웃.", Toast.LENGTH_SHORT).show();
                         intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -186,8 +235,6 @@ public class UserFragment extends Fragment {
         });
 
         // 프로필 사진 클릭 시 동작
-        ImageView user_profile = include.findViewById(R.id.user_profile);
-        ImageView user_profile_add = include.findViewById(R.id.user_profile_add);
         user_profile_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,28 +250,22 @@ public class UserFragment extends Fragment {
             }
         });
 
+      /*  Bundle bundle = getArguments();
+        if(bundle != null) {
+            String count = bundle.getString("postCount");
+            post_num.setText(count);
+
+        }*/
+
         return root;
     }
+/*
 
-   /* @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //onActivityResult에서는 callbackManager에 로그인 결과를 넘겨줌
-        if (requestCode == GALLERY_CODE) {
-            System.out.println(data.getData());
-            System.out.println(getPath(data.getData()));
-        }
+    public int count(){
+        int cnt = ((ProfileFragment) getFragmentManager().findFragmentByTag("profileFragment")).getPostCount();
+
+        return cnt;
     }
+*/
 
-    public String getPath(Uri uri){
-
-        String [] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(getActivity(),uri,proj,null,null,null);
-
-        Cursor cursor = cursorLoader.loadInBackground();
-        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        return cursor.getString(index);
-    }*/
 }

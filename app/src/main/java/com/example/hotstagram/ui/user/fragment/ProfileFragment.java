@@ -2,90 +2,124 @@ package com.example.hotstagram.ui.user.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.hotstagram.R;
-import com.example.hotstagram.ui.search.adapter.GridViewAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.hotstagram.ui.user.adapter.UserGridViewAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.File;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
+    private final String TAG = ProfileFragment.class.getSimpleName();
 
-    FirebaseStorage storage;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private GridViewAdapter gridViewAdapter;
+    FirebaseFirestore firebaseFirestore;
+    GridView userGridView;
+    ArrayList<QueryDocumentSnapshot> sendDocument;
+    private UserGridViewAdapter userGridViewAdapter;
+    ArrayList<String> sUid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        // GridView 적용
-        GridView usergridView = root.findViewById(R.id.user_gridview);
-        GridViewAdapter userGridViewAdapter = new GridViewAdapter();
-        userGridViewAdapter.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.totoro));
-        usergridView.setAdapter(userGridViewAdapter);
 
         //현재 사용자
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
 
-        storage = FirebaseStorage.getInstance("gs://hotstagram-cd509.appspot.com");
+        // GridView 적용
+        userGridView = root.findViewById(R.id.user_gridview);
+        userGridViewAdapter = new UserGridViewAdapter();
 
-        //생성된 FirebaseStorage를 참조하는 storage 생성
-        StorageReference storageRef = storage.getReference();
+        //데이터베이스 가져오기
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        sendDocument = new ArrayList<>();
+        firebaseFirestore.collection("Testt")
+                .orderBy("postNum").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //문서에 있는 값 모드 가져오기
+                        sendDocument.add(0, document);
+                    }
+                    getImg(sendDocument);
 
-        //Storage 내부의 images 폴더 안의 image.jpg 파일명을 가리키는 참조 생성
-        StorageReference pathReference = storageRef.child("images/IMG_20200716_070715.jpg");
-        try{
-            File dir = new File(Environment.getExternalStorageDirectory() + "/images");
-            final File file = new File(dir, "images/IMG_20200716_070715.jpg");
-            if (!dir.exists()) {
-                dir.mkdirs();
+                } else {
+                    Log.d("가져오기 실패", "Error getting documents: ", task.getException());
+                }
             }
-            final FileDownloadTask fileDownloadTask = pathReference.getFile(file);
-            fileDownloadTask.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                   /* tv.setText(file.getAbsolutePath());
-                    iv.setImageURI(Uri.fromFile(file));*/
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.e("zzz", "fail");
-                }
-            }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-
-                }
-            });
-        } catch(
-        Exception e) {
-            e.printStackTrace();
-        }
+        });
 
         return root;
     }
+
+    public void getImg(final ArrayList<QueryDocumentSnapshot> queryDocumentSnapshots) {
+
+        sUid = new ArrayList<>();
+        for (int getImgCount = 0; getImgCount < queryDocumentSnapshots.size(); getImgCount++) {
+
+            String uid = queryDocumentSnapshots.get(getImgCount).get("getUid").toString();
+            sUid.add(uid);
+            if (sUid.get(getImgCount).equals(firebaseUser.getUid())) {
+
+                String getimguri = queryDocumentSnapshots.get(getImgCount).get("getImgUri").toString().substring(1,57);
+                Log.e(TAG, getImgCount + "번째 Photo URI 값 : " + getimguri);
+                userGridViewAdapter.addItem(getimguri);
+                userGridView.setAdapter(userGridViewAdapter);
+
+            }
+        }
+
+        //Fragment userFragment = new UserFragment();
+        //Fragment profileFragment = new ProfileFragment();
+
+      /*  int cnt = userGridViewAdapter.getCount();
+        String post = String.valueOf(cnt);
+
+        Log.e(TAG, " Count : " + cnt);
+
+        //fragment 생성
+        UserFragment fragment = new UserFragment();
+
+        getFragmentManager().beginTransaction().replace(R.id.request_user , fragment).commit();
+
+        Bundle bundle = new Bundle(1);
+        bundle.putString("postCount", post);
+
+       // FragmentManager fm = getFragmentManager();
+       // FragmentTransaction fmt= fm.beginTransaction();
+        fragment.setArguments(bundle);
+       // fmt.replace(R.id.fragmentLayout, ).addToBackStack(null).commit();
+
+*/
+    }
+    /*
+    public int getPostCount(){
+        int cnt = userGridViewAdapter.getCount();
+        return cnt;
+    }*/
 }
+
+
+
