@@ -31,10 +31,11 @@ public class SetPostDataBase {
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
-    public void SetPostDatabase(String postNum, String getUid, String name,  ArrayList<String> ImgUri, String letter, ArrayList<String> likelist, ArrayList<String> commant){
+    public void SetPostDatabase(Long time, String postNum, String getUid, String name,  ArrayList<String> ImgUri, String letter, ArrayList<String> likelist, ArrayList<String> commant){
 
         Map<String, Object> setmapuserimg = new HashMap<>();
 
+        setmapuserimg.put("PostTime", time);
         setmapuserimg.put("postNum", postNum);
         setmapuserimg.put("getUid", getUid);
         setmapuserimg.put("name",name);

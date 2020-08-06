@@ -14,6 +14,7 @@ public class PostInfo {
     public int size;
     public Uri profil;
     public String commant;
+    public String time;
 
     public String getUid() { return uid; }
     public void setUid(String uid) { this.uid = uid; }
@@ -54,6 +55,8 @@ public class PostInfo {
     public void setProfil(Uri profil) { this.profil = profil; }
 
     public String getCommant() { return commant; }
-
     public void setCommant(String commant) { this.commant = commant; }
+
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
 }

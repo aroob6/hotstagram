@@ -30,7 +30,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class BasicFragment extends Fragment {
 
@@ -51,6 +54,17 @@ public class BasicFragment extends Fragment {
     ArrayList<String> sName;
     ArrayList<String> sPosturi;
     ArrayList<String> sInfo;
+    ArrayList<Long> sTime;
+    ArrayList<String> sMsg;
+    long regTime;
+
+    private static class TIME_MAXIMUM {
+        public static final int SEC = 60;
+        public static final int MIN = 60;
+        public static final int HOUR = 24;
+        public static final int DAY = 30;
+        public static final int MONTH = 12;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,16 +104,17 @@ public class BasicFragment extends Fragment {
             }
         });
 
-
-
         return root;
     }
+
 
     public void getImg(final ArrayList<QueryDocumentSnapshot> queryDocumentSnapshots) {
 
         sName = new ArrayList<>();
         sPosturi = new ArrayList<>();
         sInfo = new ArrayList<>();
+        sTime = new ArrayList<>();
+        sMsg = new ArrayList<>();
         sUid = new ArrayList<>();
         sUri = new ArrayList<>();
 
@@ -109,8 +124,29 @@ public class BasicFragment extends Fragment {
             sName.add(name);
             String posturi = queryDocumentSnapshots.get(getImgCount).get("getImgUri").toString().substring(1,57);;
             sPosturi.add(posturi);
-            String info = queryDocumentSnapshots.get(getImgCount).get("letter").toString();
-            sInfo.add(info);
+
+            long time = Long.parseLong(queryDocumentSnapshots.get(getImgCount).get("PostTime").toString());
+            Log.e(TAG, "게시물 올린 시간 : " + getImgCount + " : " + time);
+            long curTime = System.currentTimeMillis();
+            long diffTime = (curTime - time) / 1000;
+            String msg = null;
+            if (diffTime < TIME_MAXIMUM.SEC) {
+                msg = "방금 전";
+            } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
+                msg = diffTime + "분 전";
+            } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
+                msg = (diffTime) + "시간 전";
+            } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
+                msg = (diffTime) + "일 전";
+            } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
+                msg = (diffTime) + "달 전";
+            } else {
+                msg = (diffTime) + "년 전";
+            }
+            Log.e(TAG, "게시물 올린 시간 : " + getImgCount + " : " + diffTime);
+            sTime.add(time);
+            sMsg.add(msg);
+
             String uid = queryDocumentSnapshots.get(getImgCount).get("getUid").toString();
             sUid.add(uid);
             sUri.add("");
@@ -141,7 +177,7 @@ public class BasicFragment extends Fragment {
                        /* if(sUri.get(i) == null){
                             sUri.get(i) =
                         }*/
-                        listViewAdapter.addItem(sName.get(i), sUri.get(i) , sInfo.get(i), sPosturi.get(i));
+                        listViewAdapter.addItem(sName.get(i), sUri.get(i) , sMsg.get(i), sPosturi.get(i));
                         listView.setAdapter(listViewAdapter);
                     }
 
@@ -155,4 +191,5 @@ public class BasicFragment extends Fragment {
     private void getImageList(Activity activity, String path) {
         Log.e("firstImagePath", path + "");
     }
+
 }

@@ -9,44 +9,45 @@
         android:id="@+id/iv_commantprofile"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/user_profile2"
         android:layout_marginLeft="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/home_commant_toolbar"
+        android:layout_marginTop="8dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="5dp"/>
+        android:src="@drawable/user_profile2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_postname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="User_Name"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_commantprofile"
         app:layout_constraintStart_toEndOf="@+id/iv_commantprofile"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_postcommant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:text=" tv_postcommant"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_commantprofile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_postname"
-        app:layout_constraintTop_toBottomOf="@+id/home_commant_toolbar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toEndOf="@+id/iv_commantprofile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_postname" />
+
+    <TextView
+        android:id="@+id/tv_commanttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text=" tv_commanttime"
+        app:layout_constraintStart_toEndOf="@+id/iv_commantprofile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_postcommant" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

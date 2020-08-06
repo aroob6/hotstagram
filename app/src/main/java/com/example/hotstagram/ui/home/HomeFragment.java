@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.hotstagram.GetPostDataBase;
 import com.example.hotstagram.MainActivity;
@@ -51,11 +52,8 @@ public class HomeFragment extends Fragment {
     ArrayList<Uri> getUriList ;
     ArrayList<String> getLetterList ;
 
-    ImageView imglike;
-    TextView tvtext;
-    int like_count;
-
     View include;
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -81,6 +79,15 @@ public class HomeFragment extends Fragment {
         getNameList = new ArrayList<>();
         getUriList = new ArrayList<>();
         getLetterList = new ArrayList<>();
+
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                homerefresh();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         //데이터베이스 가져온후 어댑처 등록
@@ -111,7 +118,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void refresh(){
+    public void homerefresh(){
         Log.d("fragment","refresh");
         assert getFragmentManager() != null;
         FragmentTransaction ft = getFragmentManager().beginTransaction();

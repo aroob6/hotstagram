@@ -89,7 +89,11 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         myViewHolder.ivmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                show(view);
+                if(postInfoArrayList.get(position).getUid().equals(firebaseUser.getUid())) {
+                    show(view);
+                }else{
+                    Toast.makeText(view.getContext(), "같은 사용자가아닙니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -101,6 +105,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }
 
+        //게시물 시간
+        myViewHolder.tvpostcount.setText(postInfoArrayList.get(position).getTime());
 
         //좋아요
         if(postInfoArrayList.get(position).getCount() != -1){
@@ -140,8 +146,12 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         Log.e("postInfoArrayList.ge",""+ postInfoArrayList.get(pos).getImg());
 
                         intent = new Intent(context, UpdateUploadActivity.class);
-                        intent.putExtra("setimg",postInfoArrayList.get(pos).getImg().toString());
+                        intent.putExtra("setimg",postInfoArrayList.get(pos).getImg());
+                        intent.putExtra("setname",postInfoArrayList.get(pos).getName());
+                        intent.putExtra("settime",postInfoArrayList.get(pos).getTime());
                         intent.putExtra("setpos",pos);
+                        intent.putExtra("setUid",postInfoArrayList.get(pos).getUid());
+                        intent.putExtra("setNum",postInfoArrayList.get(pos).getNum());
                         context.startActivity(intent);
                         break;
                 }
@@ -201,6 +211,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView ivbubble;
         CircleIndicator circleIndicator;
         TextView tvcommantcount;
+        TextView tvpostcount;
 
 
         ViewPager viewPager;
@@ -219,6 +230,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ivbubble = view.findViewById(R.id.img_bubble);
             viewPager = view.findViewById(R.id.recycler_viewpager);
             tvcommantcount = view.findViewById(R.id.tv_commantcount);
+            tvpostcount = view.findViewById(R.id.tv_postcount);
 
 
             //좋아요
@@ -261,7 +273,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 intent.putExtra("proimg",postInfoArrayList.get(pos).getProfil().toString());
                 intent.putExtra("postname",postInfoArrayList.get(pos).getName());
                 intent.putExtra("pos",pos);
-                intent.putExtra("document",postInfoArrayList.get(pos).getUid()+"_"+postInfoArrayList.get(pos).getNum());
+                intent.putExtra("document",postInfoArrayList.get(pos).getUid()+"_" + postInfoArrayList.get(pos).getNum());
                 Log.e("Uid",postInfoArrayList.get(pos).getUid()+"_"+postInfoArrayList.get(pos).getNum());
                 context.startActivity(intent);
             }

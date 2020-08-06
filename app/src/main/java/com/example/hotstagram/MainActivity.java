@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
         fragment_search = new SearchFragment();
         fragment_basic = new BasicFragment();
         fragment_user = new UserFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout,fragment_home).commitAllowingStateLoss();
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_home).commitAllowingStateLoss();
 
 
         //bottom
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_home).commitAllowingStateLoss();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_home, getString(R.string.fragment_home)).commitAllowingStateLoss();
                         return true;
                     case R.id.navigation_search_bold:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_search).commitAllowingStateLoss();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_search, getString(R.string.fragment_search)).commitAllowingStateLoss();
                         return true;
                     case R.id.navigation_upload_01: {
                         Uploadimg();
@@ -78,13 +77,14 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                     case R.id.navigation_basic:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_basic).commitAllowingStateLoss();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_basic, getString(R.string.fragment_basic)).commitAllowingStateLoss();
                         return true;
                     case R.id.navigation_user:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_user).commitAllowingStateLoss();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, fragment_user, getString(R.string.fragment_user)).commitAllowingStateLoss();
                         return true;
 
-                    default: return false;
+                    default:
+                        return false;
                 }
             }
         });
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             // Get new Instance ID token
                             String ttoken = FirebaseInstanceId.getInstance().getToken();
-                            Log.d(TAG,"device token : " + ttoken);
+                            Log.d(TAG, "device token : " + ttoken);
 
                         } catch (NullPointerException e) {
                             e.printStackTrace();
@@ -110,20 +110,21 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Intent intent = getIntent();
-        if(intent != null) {//푸시알림을 선택해서 실행한것이 아닌경우 예외처리
+        if (intent != null) {//푸시알림을 선택해서 실행한것이 아닌경우 예외처리
             String notificationData = intent.getStringExtra("test");
-            if(notificationData != null)
+            if (notificationData != null)
                 Log.d("FCM_TEST", notificationData);
         }
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
-            case GALLERY_IMG:{
+        switch (requestCode) {
+            case GALLERY_IMG: {
                 if (resultCode == RESULT_OK) {
                     ArrayList<String> imageList = new ArrayList<>();
 
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         ClipData clipData = data.getClipData();
                         Log.i("clipdata", String.valueOf(clipData.getItemCount()));
-                        if (clipData.getItemCount() > 10){
+                        if (clipData.getItemCount() > 10) {
                             Toast.makeText(MainActivity.this, "사진은 10개까지 선택가능 합니다.", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Intent intent = new Intent(getApplicationContext(), NewUploadActivity.class);
-                    intent.putExtra("GALLERY_IMG",100);
+                    intent.putExtra("GALLERY_IMG", 100);
                     intent.putStringArrayListExtra("GALLERY_URI", imageList);
                     startActivity(intent);
                     navView.setSelectedItemId(R.id.navigation_home);
@@ -169,15 +170,16 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
                     navView.setSelectedItemId(R.id.navigation_home);
                 }
-            }break;
+            }
+            break;
         }
 
     }
 
-    public void Uploadimg(){
+    public void Uploadimg() {
         intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, GALLERY_IMG);
     }
 
@@ -185,9 +187,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Log.d("activity","refresh");
-        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentLayout);
-        assert homeFragment != null;
-        homeFragment.refresh();
+        Log.d("activity", "refresh");
+        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("fragment_home");
+        UserFragment userFragment = (UserFragment) getSupportFragmentManager().findFragmentByTag("fragment_user");
+        if(homeFragment!=null) {
+            homeFragment.homerefresh();
+        }else{
+            Log.e("homeFragment","null");
+        }
+
+        if(userFragment!=null) {
+            userFragment.userrefresh();
+        }else{
+            Log.e("userFragment","null");
+        }
+
     }
 }

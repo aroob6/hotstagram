@@ -1,47 +1,29 @@
 package com.example.hotstagram;
-import android.content.ContentResolver;
-import android.content.Context;
+
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hotstagram.ui.home.PostInfo;
-import com.example.hotstagram.util.GlideApp;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class NewUploadActivity extends AppCompatActivity {
@@ -58,15 +40,16 @@ public class NewUploadActivity extends AppCompatActivity {
 
     ImageView select_img;
     View include;
-    TextView tv_share;
-    TextView tv_cancle;
+    ImageView iv_share;
+    ImageView iv_cancle;
     EditText et_letter;
 
     Date now = new Date();
     ImageView ivprofile;
     ArrayList<String> imglist;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+    long time = System.currentTimeMillis();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +80,9 @@ public class NewUploadActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //공유 클릭
-        tv_share = include.findViewById(R.id.tv_share);
+        iv_share = include.findViewById(R.id.iv_share);
 
-        tv_share.setOnClickListener(new View.OnClickListener() {
+        iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<String> getimglist = new ArrayList<>();
@@ -112,8 +95,8 @@ public class NewUploadActivity extends AppCompatActivity {
             }
         });
 
-        tv_cancle = include.findViewById(R.id.tv_cancle);
-        tv_cancle.setOnClickListener(new View.OnClickListener() {
+        iv_cancle = include.findViewById(R.id.iv_cancle);
+        iv_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "취소", Toast.LENGTH_SHORT).show();
@@ -167,7 +150,7 @@ public class NewUploadActivity extends AppCompatActivity {
         ArrayList<String> arraylikeList = new ArrayList<>();
         ArrayList<String> arraycommantList = new ArrayList<>();
 
-        setPostDataBase.SetPostDatabase(formatter.format(now), firebaseUser.getUid(),firebaseUser.getDisplayName(), imgname ,letter,arraylikeList,arraycommantList);
+        setPostDataBase.SetPostDatabase(time, formatter.format(now), firebaseUser.getUid(),firebaseUser.getDisplayName(), imgname ,letter,arraylikeList,arraycommantList);
 
         //setPostDataBase.SetPostDatabase(formatter.format(now), firebaseUser.getUid(),firebaseUser.getDisplayName(),"upload/" + firebaseUser.getUid() + "_" + filename,letter,arraylikeList);
     }

@@ -5,6 +5,7 @@ public class CommantListViewItem {
     private String profileuri;
     private String name;
     private String commant;
+    private String time;
 
     public String getName(){
         return name;
@@ -19,5 +20,6 @@ public class CommantListViewItem {
     public String getProfileuri() { return profileuri; }
     public void setProfileuri(String profileuri) { this.profileuri = profileuri; }
 
-
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
 }

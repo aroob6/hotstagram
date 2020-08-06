@@ -26,6 +26,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.hotstagram.LoginActivity;
 import com.example.hotstagram.MainActivity;
@@ -267,5 +268,12 @@ public class UserFragment extends Fragment {
         return cnt;
     }
 */
+
+    public void userrefresh(){
+        Log.d("fragment","refresh");
+        assert getFragmentManager() != null;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
+    }
 
 }

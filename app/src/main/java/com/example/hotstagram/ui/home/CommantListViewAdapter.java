@@ -23,6 +23,7 @@ public class CommantListViewAdapter extends BaseAdapter {
     private ImageView iv_profile;
     private TextView tv_name;
     private TextView tv_commant;
+    private TextView tv_commantcount;
     Context context;
 
     private ArrayList<CommantListViewItem> listViewItems = new ArrayList<>();
@@ -47,12 +48,13 @@ public class CommantListViewAdapter extends BaseAdapter {
     }
 
 
-    public void addItem(String name, String profile, String commant){
+    public void addItem(String name, String profile, String commant, String time){
         CommantListViewItem item = new CommantListViewItem();
 
         item.setName(name);
         item.setProfileuri(profile);
         item.setCommant(commant);
+        item.setTime(time);
 
         listViewItems.add(item);
         notifyDataSetChanged();
@@ -71,6 +73,7 @@ public class CommantListViewAdapter extends BaseAdapter {
         tv_name = view.findViewById(R.id.tv_postname);
         tv_commant = view.findViewById(R.id.tv_postcommant);
         iv_profile = view.findViewById(R.id.iv_commantprofile);
+        tv_commantcount = view.findViewById(R.id.tv_commanttime);
 
         CommantListViewItem listViewItem = listViewItems.get(pos);
 
@@ -79,6 +82,7 @@ public class CommantListViewAdapter extends BaseAdapter {
 
         tv_name.setText(listViewItem.getName());
         tv_commant.setText(listViewItem.getCommant());
+        tv_commantcount.setText(listViewItem.getTime());
         GlideApp.with(context).load(storageRef_post).into(iv_profile);
 
 

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hotstagram.GetPostDataBase;
 import com.example.hotstagram.R;
+import com.example.hotstagram.ui.basic.BasicFragment;
 import com.example.hotstagram.util.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +39,7 @@ public class CommantActivity extends AppCompatActivity {
     String postname;
     String proimg;
     CircleImageView ivprofile;
+    CircleImageView ivmyprofile;
 
     String commant;
     ListView listView;
@@ -47,19 +50,33 @@ public class CommantActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     FirebaseStorage storage;
     StorageReference storageRefpr;
+    StorageReference storageRefpr2;
 
     EditText etcommant;
+    View include;
+    ImageView iv_cancle;
     TextView tvwrite;
     String getCommant;
 
     ArrayList<String> namelist;
     ArrayList<String> prourllist;
     ArrayList<String> commantlist;
+    ArrayList<Long> commanttimelist;
 
     CommantListViewAdapter commantListViewAdapter;
-
     DocumentReference documentReference;
 
+
+
+    long curTime = System.currentTimeMillis();
+
+    private static class TIME_MAXIMUM {
+        public static final int SEC = 60;
+        public static final int MIN = 60;
+        public static final int HOUR = 24;
+        public static final int DAY = 30;
+        public static final int MONTH = 12;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +86,17 @@ public class CommantActivity extends AppCompatActivity {
         namelist = new ArrayList<>();
         prourllist = new ArrayList<>();
         commantlist = new ArrayList<>();
+        commanttimelist = new ArrayList<>();
 
+        include = findViewById(R.id.home_commant_toolbar);
         tvpostletter = findViewById(R.id.postletter);
         tvpostname = findViewById(R.id.postname);
         ivprofile = findViewById(R.id.iv_commantprofile);
         listView = findViewById(R.id.commant_listView);
         etcommant = findViewById(R.id.et_commant);
         tvwrite = findViewById(R.id.tv_write);
+        ivmyprofile = findViewById(R.id.iv_commantprofile2);
+        iv_cancle = findViewById(R.id.iv_cancle);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -89,12 +110,22 @@ public class CommantActivity extends AppCompatActivity {
         documentUid = intent.getExtras().getString("document");
         commantListViewAdapter = new CommantListViewAdapter(getApplicationContext());
 
-        //댓글 맨위에 등록
+        //댓글상단 등록
         tvpostletter.setText(postletter);
         tvpostname.setText(postname);
         storage = FirebaseStorage.getInstance();
-        storageRefpr = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/" +proimg);
+        storageRefpr = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/" + proimg);
         GlideApp.with(getApplicationContext()).load(storageRefpr).error(R.drawable.basic_fill).into(ivprofile);
+
+        firebaseFirestore.collection("Inter_Test").document(firebaseUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                String myimguri = documentSnapshot.get("ProfileURI").toString();
+                storageRefpr2 = storage.getReferenceFromUrl("gs://hotstagram-cd509.appspot.com/" + myimguri);
+                GlideApp.with(getApplicationContext()).load(storageRefpr2).error(R.drawable.basic_fill).into(ivmyprofile);
+            }
+        });
 
         //댓글보기
         documentReference = firebaseFirestore.collection("Testt").document(documentUid);
@@ -105,19 +136,34 @@ public class CommantActivity extends AppCompatActivity {
                 final DocumentSnapshot document2 = task.getResult();
                 if(document2.get("commantList") != null) {
                     String getcommants = document2.get("commantList").toString();
-                    Log.e("document2.ge", "ㄱㄱ" + getcommants.substring(1, getcommants.length() - 1));
 
                     String[] splitcommant = getcommants.substring(1, getcommants.length() - 1).split(",");
                     for (int i = 0; i < splitcommant.length; i++) {
-                        Log.e("document2.ge" + i, "ㄱㄱ" + splitcommant[i]);
-                        if (i % 3 == 0) { namelist.add(splitcommant[i]); }
-                        if (i % 3 == 1) { prourllist.add(splitcommant[i]); }
-                        if (i % 3 == 2) { commantlist.add(splitcommant[i]); }
+                        if (i % 4 == 0) { namelist.add(splitcommant[i]); }
+                        if (i % 4 == 1) { prourllist.add(splitcommant[i]); }
+                        if (i % 4 == 2) { commantlist.add(splitcommant[i]); }
+                        if (i % 4 == 3) { commanttimelist.add(Long.parseLong(splitcommant[i])); }
                     }
-
-                    for (int i = 0; i < namelist.size(); i++) {
-                        commantListViewAdapter.addItem(namelist.get(i), prourllist.get(i), commantlist.get(i));
-                        listView.setAdapter(commantListViewAdapter);
+                    if(commanttimelist.size()>0) {
+                        for (int i = 0; i < namelist.size(); i++) {
+                            long diffTime = (curTime - commanttimelist.get(i)) / 1000;
+                            String msg = null;
+                            if (diffTime < TIME_MAXIMUM.SEC) {
+                                msg = "방금 전";
+                            } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
+                                msg = diffTime + "분 전";
+                            } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
+                                msg = (diffTime) + "시간 전";
+                            } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
+                                msg = (diffTime) + "일 전";
+                            } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
+                                msg = (diffTime) + "달 전";
+                            } else {
+                                msg = (diffTime) + "년 전";
+                            }
+                            commantListViewAdapter.addItem(namelist.get(i), prourllist.get(i), commantlist.get(i), msg);
+                            listView.setAdapter(commantListViewAdapter);
+                        }
                     }
                 }
             }
@@ -141,17 +187,23 @@ public class CommantActivity extends AppCompatActivity {
                         Log.e("documentUri", document.get("ProfileURI").toString()+"");
                         Log.e("getCommant", getCommant+"");
 
-                        commantListViewAdapter.addItem(document.get("NickName").toString(), document.get("ProfileURI").toString(), getCommant);
+                        commantListViewAdapter.addItem(document.get("NickName").toString(), document.get("ProfileURI").toString(), getCommant, "방금 전");
 
-                        String commantAll = document.get("NickName").toString() + "," + document.get("ProfileURI").toString() + "," + getCommant;
+                        String commantAll = document.get("NickName").toString() + "," + document.get("ProfileURI").toString() + "," + getCommant +  "," + curTime;
                         GetPostDataBase getPostDataBase = new GetPostDataBase(getApplicationContext());
-                        getPostDataBase.UpdataPostCommantDataBase(pos,commantAll);
+                        getPostDataBase.UpdataPostCommantDataBase(documentUid,commantAll);
                         listView.setAdapter(commantListViewAdapter);
                     }
                 });
             }
         });
 
+        iv_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
 

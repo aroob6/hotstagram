@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.hotstagram.MainActivity;
 import com.example.hotstagram.R;
 import com.example.hotstagram.ui.user.UserGridItemView;
+import com.example.hotstagram.ui.user.fragment.UserFragment;
 import com.example.hotstagram.util.GlideApp;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -123,8 +124,7 @@ public class ProfileModifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(ProfileModifyActivity.this,"프로필 수정 취소", Toast.LENGTH_SHORT).show();
-                intent = new Intent(ProfileModifyActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -138,8 +138,7 @@ public class ProfileModifyActivity extends AppCompatActivity {
                     storeProfilePhoto(photouri);
                 }
                 Toast.makeText(ProfileModifyActivity.this,"프로필 수정 완료", Toast.LENGTH_SHORT).show();
-                intent = new Intent(ProfileModifyActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

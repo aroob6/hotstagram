@@ -132,4 +132,10 @@
 
     4. 회원신청 시 기재된 사항이 변경 시 회원은 온라인의 정보수정을 통해 정보를 수정 하여야 하며, 회원정보의 미변경으로 인한 모든 문제의 책임은 회원에게 있습니다.\n
     </string>
+    <string name="fragment_home">fragment_home</string>
+    <string name="fragment_search">fragment_search</string>
+    <string name="fragment_basic">fragment_basic</string>
+    <string name="fragment_user">fragment_user</string>
+
+
 </resources>
