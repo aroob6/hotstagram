@@ -138,6 +138,7 @@ public class GetPostDataBase {
                     String getId = sendDocument.get(position).getId();
                     String postNum = sendDocument.get(position).get("postNum").toString();
 
+                    Log.e("삭제샂ㄱ제", "같냐" + postInfoArrayList.get(position).getNum().equals(postNum));
                     if (postInfoArrayList.get(position).getNum().equals(postNum)) {
                         collectionReference.document(getId)
                                 .delete()
